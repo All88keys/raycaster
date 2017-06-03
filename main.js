@@ -14,15 +14,15 @@ var map =
         [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
         [1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1],
-        [1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1],
+        [1, 0, 1, 2, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1],
         [1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1],
-        [1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1],
-        [1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1],
-        [1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1],
-        [1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1],
-        [1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1],
+        [1, 1, 0, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1],
+        [1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 1, 1, 1],
+        [1, 0, 0, 0, 1, 1, 2, 0, 0, 0, 0, 0, 0, 2, 0, 2, 0, 1, 1, 1],
+        [1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1, 1, 1],
+        [1, 1, 0, 0, 1, 1, 2, 2, 0, 0, 0, 1, 0, 2, 0, 2, 0, 1, 1, 1],
         [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1],
-        [1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+        [1, 1, 1, 0, 0, 0, 2, 1, 2, 1, 2, 1, 1, 1, 0, 1, 1, 1, 1, 1],
         [1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1],
         [1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1],
         [1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1],
@@ -37,8 +37,8 @@ var map =
 var walls = []; //array of walls
 var rays = []; //array of rays for testing distance from player;
 var nrays = 400; //number of arrays
-var fov = Math.PI/5;
-var viewDist = c.width;
+var fov = Math.PI/3;
+var viewDist = c.width/3;
 
 //fills array
 for(var ix = 0; ix<map[0].length; ix++){
@@ -85,12 +85,22 @@ var player ={
   speed : 250, //pixels a second
   colDist: .2, //distance in PU for wall detection
   update: function(){
-  	if (key.isDown(key.UP)) {player.yvel = Math.sin(player.facing)*-(player.speed/fps);}
-  	if (key.isDown(key.LEFT)) {player.xvel = -(player.speed/fps);}
-  	if (key.isDown(key.DOWN)) {player.yvel = player.speed/fps;}
-  	if (key.isDown(key.RIGHT)) {player.xvel = player.speed/fps;}
-    if(!key.isDown(key.UP) && !key.isDown(key.DOWN)){player.yvel = 0;}
-    if(!key.isDown(key.LEFT) && !key.isDown(key.RIGHT)){player.xvel = 0;}
+  	if (key.isDown(key.UP)) {
+			player.yvel += Math.sin(player.facing)*-(player.speed/fps);
+			player.xvel += Math.cos(player.facing)*(player.speed/fps);
+		}
+  	if (key.isDown(key.LEFT)) {player.xvel = Math.cos(player.facing)*-(player.speed/fps);
+			player.yvel += Math.sin(player.facing+Math.PI/2)*-(player.speed/fps);
+			player.xvel += Math.cos(player.facing+Math.PI/2)*(player.speed/fps);
+		}
+  	if (key.isDown(key.DOWN)) {
+			player.yvel += Math.sin(player.facing+Math.PI)*-(player.speed/fps);
+			player.xvel += Math.cos(player.facing+Math.PI)*(player.speed/fps);
+		}
+  	if (key.isDown(key.RIGHT)) {
+			player.yvel += Math.sin(player.facing-Math.PI/2)*-(player.speed/fps);
+			player.xvel += Math.cos(player.facing-Math.PI/2)*(player.speed/fps);
+		}
 
     var colDist = .15;
     var pux = ((player.x/c.width)*map[0].length);
@@ -145,6 +155,8 @@ var player ={
     if (key.isDown(key.LEFTARROW)) {player.facing +=.05}
     player.x +=player.xvel;
     player.y +=player.yvel;
+		player.xvel = 0;
+		player.yvel = 0;
 
     ctx.beginPath();
     ctx.strokeStyle = 'black';
