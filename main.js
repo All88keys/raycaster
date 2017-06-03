@@ -89,7 +89,7 @@ var player ={
 			player.yvel += Math.sin(player.facing)*-(player.speed/fps);
 			player.xvel += Math.cos(player.facing)*(player.speed/fps);
 		}
-  	if (key.isDown(key.LEFT)) {player.xvel = Math.cos(player.facing)*-(player.speed/fps);
+  	if (key.isDown(key.LEFT)) {
 			player.yvel += Math.sin(player.facing+Math.PI/2)*-(player.speed/fps);
 			player.xvel += Math.cos(player.facing+Math.PI/2)*(player.speed/fps);
 		}
