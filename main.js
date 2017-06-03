@@ -3,13 +3,13 @@ var ctx = c.getContext('2d');
 var fps = 60;
 
 
-var map =
+/*var map =
 	[[2,1,2,1,2],
 	[1,0,0,0,1],
 	[2,0,2,0,2],
 	[1,0,0,0,1],
-	[2,1,2,1,2]];
-/*
+	[2,1,2,1,2]]; */
+
 var map =
         [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
@@ -32,12 +32,12 @@ var map =
         [1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]];
 
-*/
+
 
 var walls = []; //array of walls
 var rays = []; //array of rays for testing distance from player;
 var nrays = 400; //number of arrays
-var fov = Math.PI/3;
+var fov = Math.PI/5;
 var viewDist = c.width;
 
 //fills array
@@ -77,15 +77,15 @@ function wall(x, y, sizex, sizey, color){
 //player
 var player ={
 	size: (Math.min(c.width/map[0].length, c.height/map.length)/2)-10, //10px smaller than a square on the map
-  x : (c.width/2)+100,
-  y : (c.height/2)+100,
+  x : (c.width/2),
+  y : (c.height/2),
   xvel: 0, //x velocity
   yvel: 0, // y velocity
   facing : 0, //angle in radians player is facing
   speed : 250, //pixels a second
   colDist: .2, //distance in PU for wall detection
   update: function(){
-  	if (key.isDown(key.UP)) {player.yvel = -(player.speed/fps);}
+  	if (key.isDown(key.UP)) {player.yvel = Math.sin(player.facing)*-(player.speed/fps);}
   	if (key.isDown(key.LEFT)) {player.xvel = -(player.speed/fps);}
   	if (key.isDown(key.DOWN)) {player.yvel = player.speed/fps;}
   	if (key.isDown(key.RIGHT)) {player.xvel = player.speed/fps;}
